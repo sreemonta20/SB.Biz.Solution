@@ -18,13 +18,14 @@ A modern, responsive web application for managing customers, products, and sales
 
 ## 🚀 Features
 
-*   **Dashboard**: Real-time business metrics and visual data representation.
-*   **Customer Management**: Full CRUD operations with server-side validation.
-*   **Inventory Control**: Product management with stock tracking.
+*   **Dashboard**: Real-time business metrics and visual data representation. (not finished yet)
+*   **Customer Management**: Full CRUD operations with server-side validation. (wihout Delete)
+*   **Inventory Control**: Product management with stock tracking.(wihout Delete)
 *   **Dynamic Order System**: 
     *   Interactive JavaScript-based order creation.
     *   Live price calculation (Line Total & Grand Total).
     *   **AJAX-powered** Modal views for order details.
+    *   No Delete view added.
 *   **Architecture**: Clean MVC pattern with Dependency Injection and Asynchronous programming.
 
 ## 🛠 Tech Stack
@@ -42,13 +43,13 @@ Ensure your development environment is set up with:
 1.  **[Visual Studio 2026](https://visualstudio.microsoft.com/)** (Community, Professional, or Enterprise).
     *   *Workload required:* "ASP.NET and web development".
 2.  **[.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** (Usually included with VS 2026).
-3.  **SQL Server** (SQL Server 2022/2025 or LocalDB).
+3.  **SQL Server** (SQL Server 2016/2022/2025 or LocalDB).
 
 ## 🔧 Configuration
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/sreemonta20/SB.Biz.Solution.git)
     cd your-repo-name
     ```
 
