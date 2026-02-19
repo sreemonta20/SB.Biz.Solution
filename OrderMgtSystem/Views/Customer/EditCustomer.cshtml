@@ -1,0 +1,87 @@
+﻿@model OrderMgtSystem.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Customer</h4>
+                </div>
+                <div class="card-body">
+                    <form form asp-action="EditCustomer" method="post">
+                        <!-- Validation Summary for global errors -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <!-- Hidden ID Field -->
+                        <input type="hidden" asp-for="CustomerId" />
+                        <input type="hidden" asp-for="CreatedDate" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="FirstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                                <input asp-for="FirstName" class="form-control" placeholder="e.g. John" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="LastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <input asp-for="LastName" class="form-control" placeholder="e.g. Doe" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input asp-for="Email" class="form-control" placeholder="john@example.com" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label">Phone <span class="text-danger">*</span></label>
+                                <input asp-for="Phone" class="form-control" placeholder="+1-555-000-0000" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label text-muted">Created Date (Read Only)</label>
+                                <input value="@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")" class="form-control bg-light" readonly />
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Update Customer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    fieldset {
+        border-left: 4px solid #007bff;
+        padding-left: 20px;
+    }
+
+    legend {
+        font-weight: 600;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-lg {
+        margin-right: 10px;
+    }
+</style>

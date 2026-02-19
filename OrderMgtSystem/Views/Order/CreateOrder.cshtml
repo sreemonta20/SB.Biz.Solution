@@ -1,0 +1,236 @@
+﻿@model OrderMgtSystem.Models.Order
+
+@{
+    ViewData["Title"] = "Create New Order";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0"><i class="bi bi-cart-plus"></i> Create New Order</h4>
+        </div>
+        <div class="card-body">
+            <!-- Order Header Info -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Select Customer <span class="text-danger">*</span></label>
+                    <!-- Using asp-items or Html.DropDownList. Ensure ViewBag.CustomerId is passed from Controller -->
+                    @Html.DropDownList("CustomerId", (IEnumerable<SelectListItem>)ViewBag.CustomerId, "-- Select Customer --", new { @class = "form-select", id = "ddlCustomer" })
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Order Date</label>
+                    <input type="date" class="form-control bg-light" id="orderDate" readonly>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Order Items Section -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="text-secondary">Order Items</h5>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRow()">
+                    <i class="bi bi-plus-circle"></i> Add Item
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="orderTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40%">Product</th>
+                            <th style="width: 15%">Price</th>
+                            <th style="width: 15%">Quantity</th>
+                            <th style="width: 20%">Line Total</th>
+                            <th style="width: 10%" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be added here via JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Grand Total:</td>
+                            <td colspan="2" class="fw-bold fs-5 text-success">
+                                $<span id="txtGrandTotal">0.00</span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 text-end">
+                <a href="@Url.Action("Index")" class="btn btn-secondary me-2">Cancel</a>
+                <button type="button" class="btn btn-success btn-md" onclick="submitOrder()">
+                    <i class="bi bi-check-circle"></i> Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 1. Initialize Data
+        // Serialize the ViewBag product list to a JS object
+        const products = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ProductList));
+
+        // Set Today's Date
+        document.getElementById('orderDate').valueAsDate = new Date();
+
+        // 2. Add Row Function
+        function addRow() {
+            if (!products || products.length === 0) {
+                alert("No products available to add.");
+                return;
+            }
+
+            // Create the Options for the Select List
+            let options = '<option value="" data-price="0">-- Select Product --</option>';
+            products.forEach(p => {
+                options += `<option value="${p.ProductId}" data-price="${p.Price}">${p.Name}</option>`;
+            });
+
+            // Construct the HTML Row
+            let row = `
+                <tr>
+                    <td>
+                        <select class="form-select item-select">${options}</select>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control item-price" value="0.00" readonly />
+                        </div>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control item-qty" value="1" min="1" />
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control item-total" value="0.00" readonly />
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRow(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+
+            $('#orderTable tbody').append(row);
+        }
+
+        // 3. Remove Row Function
+        function removeRow(btn) {
+            $(btn).closest('tr').remove();
+            calculateGrandTotal();
+        }
+
+        // 4. Event Delegation for Calculation
+        // This handles changes on any current or future rows
+        $(document).on('change', '.item-select', function() {
+            let row = $(this).closest('tr');
+            let price = parseFloat($(this).find(':selected').data('price')) || 0;
+
+            // Update Price Input
+            row.find('.item-price').val(price.toFixed(2));
+
+            // Trigger calculation
+            calculateRowTotal(row);
+        });
+
+        $(document).on('change keyup', '.item-qty', function() {
+            let row = $(this).closest('tr');
+            calculateRowTotal(row);
+        });
+
+        function calculateRowTotal(row) {
+            let price = parseFloat(row.find('.item-price').val()) || 0;
+            let qty = parseFloat(row.find('.item-qty').val()) || 0;
+            let total = price * qty;
+
+            row.find('.item-total').val(total.toFixed(2));
+            calculateGrandTotal();
+        }
+
+        function calculateGrandTotal() {
+            let grandTotal = 0;
+            $('.item-total').each(function() {
+                grandTotal += parseFloat($(this).val()) || 0;
+            });
+            $('#txtGrandTotal').text(grandTotal.toFixed(2));
+        }
+
+        // 5. Submit Order
+        function submitOrder() {
+            let customerId = $('#ddlCustomer').val();
+            let items = [];
+            let isValid = true;
+
+            // Loop through rows to build the OrderItems array
+            $('#orderTable tbody tr').each(function() {
+                let productId = $(this).find('.item-select').val();
+                let quantity = parseInt($(this).find('.item-qty').val());
+
+                if (!productId || productId === "") {
+                    isValid = false;
+                    $(this).find('.item-select').addClass('is-invalid'); // Visual error
+                } else {
+                    $(this).find('.item-select').removeClass('is-invalid');
+                    items.push({
+                        ProductId: parseInt(productId),
+                        Quantity: quantity
+                    });
+                }
+            });
+
+            // Validation
+            if (!customerId) {
+                alert("Please select a customer.");
+                $('#ddlCustomer').focus();
+                return;
+            }
+            if (!isValid) {
+                alert("Please select a product for all rows.");
+                return;
+            }
+            if (items.length === 0) {
+                alert("Please add at least one item to the order.");
+                return;
+            }
+
+            // Construct Payload
+            const payload = {
+                CustomerId: parseInt(customerId),
+                OrderItems: items
+            };
+
+            // Send AJAX Request
+            $.ajax({
+                url: '@Url.Action("CreateOrder")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function(response) {
+                    if (response.success) {
+                        // Optional: Show success message/modal before redirect
+                        window.location.href = '@Url.Action("Index")';
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    alert("Submission failed. Please check the console for details.");
+                }
+            });
+        }
+
+        // Add one empty row on load
+        $(document).ready(function() {
+            addRow();
+        });
+    </script>
+}

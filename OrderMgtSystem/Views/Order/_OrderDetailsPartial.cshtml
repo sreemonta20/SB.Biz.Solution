@@ -1,0 +1,51 @@
+﻿@model OrderMgtSystem.Models.Order
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <h6 class="text-primary">Customer Information</h6>
+        <p class="mb-0"><strong>Name:</strong> @Model.Customer.FirstName @Model.Customer.LastName</p>
+        <p class="mb-0"><strong>Email:</strong> @Model.Customer.Email</p>
+        <p><strong>Phone:</strong> @Model.Customer.Phone</p>
+    </div>
+    <div class="col-md-6 text-end">
+        <h6 class="text-primary">Order Summary</h6>
+        <p class="mb-0"><strong>Date:</strong> @Model.OrderDate.ToString("MMM dd, yyyy")</p>
+        <p class="mb-0">
+            <strong>Status:</strong>
+            <span class="badge @(Model.Status.ToString() == "Completed" ? "bg-success" : Model.Status.ToString() == "Cancelled" ? "bg-danger" : "bg-warning text-dark")">
+                @Model.Status
+            </span>
+        </p>
+    </div>
+</div>
+
+<h6 class="mt-4 text-primary">Order Items</h6>
+<div class="table-responsive">
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Product Name</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-end">Unit Price</th>
+                <th class="text-end">Line Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td class="text-center">@item.Quantity.ToString("N0")</td>
+                    <td class="text-end">$@item.UnitPrice.ToString("N2")</td>
+                    <td class="text-end">$@item.LineTotal.ToString("N2")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="fw-bold bg-light">
+                <td colspan="3" class="text-end">Grand Total</td>
+                <td class="text-end text-success">$@Model.TotalAmount.ToString("N2")</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

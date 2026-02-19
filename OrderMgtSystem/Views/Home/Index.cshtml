@@ -1,0 +1,60 @@
+﻿@* @{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+ *@
+<!-- Main Content -->
+<main class="container mt-4">
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Welcome to Order Management</h1>
+            <p class="col-md-8 fs-4">Manage your customers, inventory, and sales orders efficiently from a single dashboard.</p>
+            <button class="btn btn-primary btn-lg" type="button" onclick="window.location.href='orders.html'">Go to Orders</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+            <div class="h-100 p-5 text-white bg-dark rounded-3">
+                <h2>Quick Stats</h2>
+                <ul class="list-unstyled mt-3">
+                    <li class="mb-2"><i class="bi bi-people-fill me-2"></i> <strong>154</strong> Active Customers</li>
+                    <li class="mb-2"><i class="bi bi-box-seam me-2"></i> <strong>42</strong> Products in Stock</li>
+                    <li class="mb-2"><i class="bi bi-cart-check me-2"></i> <strong>1,204</strong> Completed Orders</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+                <h2>Monthly Sales</h2>
+                <!-- Fake Chart Canvas -->
+                <canvas id="salesChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('salesChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: [12000, 19000, 3000, 5000, 2000, 30000],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+    </script>
+}

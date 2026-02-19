@@ -1,0 +1,87 @@
+﻿@model OrderMgtSystem.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Product</h4>
+                </div>
+                <div class="card-body">
+                    <form form asp-action="EditProduct" method="post">
+                        <!-- Validation Summary for global errors -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <!-- Hidden ID Field -->
+                        <input type="hidden" asp-for="ProductId" />
+                        <input type="hidden" asp-for="CreatedDate" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label">First Name <span class="text-danger">*</span></label>
+                                <textarea asp-for="Name" class="form-control" rows="3" placeholder="Product Name"></textarea>
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Description" class="form-label"> Description<span class="text-danger">*</span></label>
+                                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Description"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Price" class="form-label"> Price<span class="text-danger">*</span></label>
+                                <input type="number" asp-for="Price" class="form-control" placeholder="0.00" min="0.01" step="0.01">
+                                <span asp-validation-for="Price" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="StockQuantity" class="form-label">Stock Quantity<span class="text-danger">*</span></label>
+                                <input type="number" asp-for="StockQuantity" class="form-control" placeholder="0.00" min="0.01" step="0.01">
+                                <span asp-validation-for="StockQuantity" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label text-muted">Created Date (Read Only)</label>
+                                <input value="@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")" class="form-control bg-light" readonly />
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Update Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    fieldset {
+        border-left: 4px solid #007bff;
+        padding-left: 20px;
+    }
+
+    legend {
+        font-weight: 600;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-lg {
+        margin-right: 10px;
+    }
+</style>

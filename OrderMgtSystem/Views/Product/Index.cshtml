@@ -1,0 +1,81 @@
+@model IEnumerable<OrderMgtSystem.Models.Product>
+
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<main class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Product Management</h2>
+        <a href="@Url.Action("CreateProduct")" class="btn btn-success"><i class="bi bi-person-plus-fill"></i> Create New Product</a>
+    </div>
+    <!-- Alert Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Created</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Count() > 0)
+                        {
+                            @foreach (var oProduct in Model)
+                            {
+                                <tr>
+                                    <td><strong>#@oProduct.ProductId</strong></td>
+                                    <td>@oProduct.Name</td>
+                                    <td>@oProduct.Description</td>
+                                    <td>@oProduct.Price</td>
+                                    <td>@oProduct.StockQuantity</td>
+                                    <td>@oProduct.CreatedDate.ToString("MMM dd, yyyy")</td>
+                                    <td class="text-end">
+                                        <a href="@Url.Action("EditProduct", new { id = oProduct.ProductId })" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="@Url.Action("ProductDetails", new { id = oProduct.ProductId })" class="btn btn-sm btn-info" title="View Details">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action("DeleteProduct", new { id = oProduct.ProductId })" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="11" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox"></i> No Product found. <a href="@Url.Action("CreateProduct")">Create one now!</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+

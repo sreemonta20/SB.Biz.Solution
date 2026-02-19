@@ -1,0 +1,102 @@
+@model OrderMgtSystem.Models.Product
+
+@{
+    ViewData["Title"] = "Create New Product";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Create New Product</h2>
+            <p class="text-muted">Fill in the details below to create a new Product</p>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <form asp-action="CreateProduct" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Product Details Section -->
+                        <fieldset>
+                            <legend class="text-primary mb-3 mt-4">Product Details</legend>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Name" class="form-label"></label>
+                                        <textarea asp-for="Name" class="form-control" rows="3" placeholder="Product Name"></textarea>
+                                        <span asp-validation-for="Name" class="text-danger small"></span>
+                                        <small class="form-text text-muted">Required: 1-100 characters</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Description" class="form-label"></label>
+                                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Description"></textarea>
+                                        <span asp-validation-for="Description" class="text-danger small"></span>
+                                        <small class="form-text text-muted">Required: 1-100 characters</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Price" class="form-label"></label>
+                                        <input type="number" asp-for="Price" class="form-control" placeholder="0.00" min="0.01" step="0.01">
+                                        <span asp-validation-for="Price" class="text-danger small"></span>
+                                        <small class="form-text text-muted">Required: $0.01 - $999999.99</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="StockQuantity" class="form-label"></label>
+                                        <input type="number" asp-for="StockQuantity" class="form-control" placeholder="0.00" min="0.01" step="0.01">
+                                        <span asp-validation-for="StockQuantity" class="text-danger small"></span>
+                                        <small class="form-text text-muted">Required: $0.01 - $999999.99</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                        <!-- Form Actions -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Save Product
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    fieldset {
+        border-left: 4px solid #007bff;
+        padding-left: 20px;
+    }
+
+    legend {
+        font-weight: 600;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-lg {
+        margin-right: 10px;
+    }
+</style>
